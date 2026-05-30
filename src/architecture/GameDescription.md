@@ -38,22 +38,3 @@
     После каждого хода проверка, достиг ли кто-то из игроков состояния «башня перевёрнута»
     Подсчёт статистики игроков (количество побед, поражений)
 
-
-Архитектура и взаимодействие классов
-
-    1. Начало игры: GemeService создаёт объект Game с игроками и их башнями 
-    2. Ход игрока: GameScreen считывает действие пользователя, формируется Action и передается в GemeService
-    3. Проверка: GemeService.performAction: через moveValidator проеверяется корректность действия
-    4. Выполнение действия : При успешной валидации GameService выполняет действие:
-       REPLACE – берёт карту из колоды, выполняет Tower.replaceCard(pos, newCard), старую карту добавляет в commonCards.
-       USE_EFFECT – берёт выбранную общую карту из commonCards. Если карта имеет тип MOVE, то в зависимости от переданных pos1, pos2 вызывается один из методов Tower (moveUp, moveDown, swapCards).
-       DESTROY – вызывается для каждого игрока Tower.destroyCard(pos1). После применения эффекта карту добавляет в commonCards.
-    5. проверка одинаковых карт(в commonCards) если такие есть, то карты перемещаются в discardPile.
-    6. Запись хода: GameService создаёт объект Move, содержащий имя игрока, действие и добавляет его в Game.moves.
-    7. Проверка конца игры: GameService вызывает Game.checkWin(), который проверяет башню текущего игрока через Tower.isSolved()
-    8. Ход сменяется на следующего игрока(если игра не закончена): GameService.nextTurn()
-    9. Запись состояния: GameService.getGameState() создаёт GameState на основе текущего состояния Game. Он включает список PlayerState, 
-        список commonCards и имя текущего игрока.
-    10. Отображение: GameScreen.displayState(gameState) получает GameState и рисует интерфейс
-    11. Сохранение : GameService.saveGame() вызывает GameRepository.save(game)
-    12. Статистика: берет данные из GameRepository

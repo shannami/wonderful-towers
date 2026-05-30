@@ -17,7 +17,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "Wonderful Tower"
     ) {
-        GameScreen(viewModel)
+        GameScreen(viewModel, repository)
     }
-
 }

@@ -4,19 +4,17 @@ import domain.action.Action
 import domain.card.Card
 import domain.game.Game
 import domain.move.MoveHistory
-import repository.GameRepository
+import repository.IGameRepository
 import validation.MoveValidator
 
 class GameService(
     private var game: Game,
-    private val repository: GameRepository,
+    private val repository: IGameRepository,
     private val validator: MoveValidator
 ) {
 
     fun performAction(action: Action) {
-        if (!validator.validate(game, action)) {
-            return
-        }
+        if (!validator.validate(game, action)) return
         action.perform(game)
         game.moveHistory.add(
             MoveHistory(
@@ -26,18 +24,15 @@ class GameService(
         )
         handleDuplicateEffects()
         checkWin()
-        repository.save(game)
     }
 
     fun useCommonCard(card: Card) {
         game.commonCards.removeIf { it.id == card.id }
         game.discardPile.add(card)
-        repository.save(game)
     }
 
     fun endTurn() {
         game.nextPlayer()
-        repository.save(game)
     }
 
     fun getGame(): Game = game
@@ -58,9 +53,11 @@ class GameService(
     }
 
     private fun checkWin() {
+        if (game.isFinished) return
         game.players.forEach { player ->
             if (player.tower.isSorted()) {
                 game.finishGame(player)
+                repository.save(game)
             }
         }
     }

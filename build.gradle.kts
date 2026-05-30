@@ -23,7 +23,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher" )
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.xerial:sqlite-jdbc:3.44.1.0")
 }
 
 tasks.test {
