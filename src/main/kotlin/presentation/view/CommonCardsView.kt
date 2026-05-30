@@ -22,11 +22,7 @@ fun CommonCardsView(
                 androidx.compose.material.Text(
                     text = "${card.id}\n${card.effect}"
                 )
-
             }
-
         }
-
     }
-
 }
