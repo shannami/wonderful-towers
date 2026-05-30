@@ -1,20 +1,27 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
 plugins {
     kotlin("jvm") version "1.9.24"
+    id("org.jetbrains.compose") version "1.6.11"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    maven(url = "https://maven.aliyun.com/repository/public")
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    google()
 }
 
 dependencies {
-    // Kotlin
     implementation(kotlin("stdlib"))
-
-    // JUnit 5
+    implementation(compose.desktop.currentOs)
+    implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher" )
+    testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -25,4 +32,15 @@ tasks.test {
 
 kotlin {
     jvmToolchain(17)
+}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "wonderful-towers"
+            packageVersion = "1.0.0"
+        }
+    }
 }

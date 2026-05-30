@@ -1,0 +1,17 @@
+package domain.action
+
+import domain.game.Game
+
+class DestroyBottomAction : Action {
+    override val displayName = "Destroy Bottom"
+    override fun perform(game: Game) {
+        game.players.forEach { player ->
+            if (player.tower.isEmpty()) return@forEach
+            val newCard = game.deck.draw() ?: return@forEach
+            val index = player.tower.lastIndex()
+            val removed = player.tower.removeAt(index) ?: return@forEach
+            game.commonCards.add(removed)
+            player.tower.insertAt(index, newCard)
+        }
+    }
+}
